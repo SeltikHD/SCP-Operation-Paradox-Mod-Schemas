@@ -1,0 +1,108 @@
+{
+	"$schema": "https://json-schema.org/draft-07/schema#",
+	"type": "object",
+	"required": ["name", "description", "class", "metadata", "default"],
+	"properties": {
+		"name": {
+			"type": "string",
+			"description": "Nome do inimigo."
+		},
+		"description": {
+			"type": "string",
+			"description": "Descrição do inimigo."
+		},
+		"class": {
+			"type": "string",
+			"enum": ["common", "miniboss", "boss"],
+			"description": "Classificação do inimigo."
+		},
+		"metadata": {
+			"type": "object",
+			"required": ["tile-size", "animations"],
+			"properties": {
+				"tile-size": {
+					"type": "integer",
+					"description": "Tamanho de cada tile no spritesheet em pixels.",
+					"minimum": 1
+				},
+				"animations": {
+					"type": "object",
+					"patternProperties": {
+						".*": {
+							"type": "object",
+							"required": ["frames", "trigger"],
+							"properties": {
+								"frames": {
+									"type": "array",
+									"items": { "type": "integer" },
+									"description": "Índices dos frames para esta animação."
+								},
+								"trigger": {
+									"type": "string",
+									"description": "Evento que ativa a animação."
+								}
+							}
+						}
+					},
+					"description": "Mapeamento de animações e seus triggers."
+				}
+			}
+		},
+		"default": {
+			"type": "object",
+			"required": ["health", "damage", "movement-pattern", "attack-type"],
+			"properties": {
+				"health": {
+					"type": "number",
+					"description": "Vida inicial do inimigo.",
+					"minimum": 1
+				},
+				"damage": {
+					"type": "number",
+					"description": "Dano que o inimigo causa.",
+					"minimum": 0
+				},
+				"movement-pattern": {
+					"type": "string",
+					"enum": [
+						"patrol",
+						"stationary",
+						"chase",
+						"wander",
+						"flee",
+						"orbit",
+						"strafe",
+						"follow-leader",
+						"jump",
+						"zigzag",
+						"teleport"
+					],
+					"description": "Padrão de movimento do inimigo."
+				},
+				"attack-type": {
+					"type": "string",
+					"enum": [
+						"melee",
+						"ranged",
+						"area",
+						"status-effect",
+						"dash",
+						"charge",
+						"trap",
+						"drain",
+						"summon",
+						"reflect",
+						"self-destruct",
+						"multi"
+					],
+					"description": "Tipo de ataque do inimigo."
+				},
+				"speed": {
+					"type": "number",
+					"description": "Velocidade de movimento do inimigo.",
+					"minimum": 0
+				}
+			}
+		}
+	}
+}
