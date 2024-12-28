@@ -1,0 +1,26 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "title": {
+            "type": "string",
+            "description": "The title of the pack."
+        },
+        "description": {
+            "type": "string",
+            "description": "A description of the pack."
+        },
+        "version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$",
+            "description": "The version of the pack in semantic versioning format."
+        },
+        "game-version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$",
+            "description": "The compatible game version in semantic versioning format."
+        }
+    },
+    "required": ["title", "description", "version", "game-version"],
+    "additionalProperties": false
+}
