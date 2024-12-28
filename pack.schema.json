@@ -3,6 +3,11 @@
     "$id": "https://raw.githubusercontent.com/SeltikHD/SCP-Operation-Paradox-Mod-Schemas/refs/heads/master/pack.schema.json",
     "type": "object",
     "properties": {
+        "$schema": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to the schema file."
+        },
         "title": {
             "type": "string",
             "description": "The title of the pack."

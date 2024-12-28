@@ -5,6 +5,11 @@
     "description": "Defines the structure for playable entity information.",
     "type": "object",
     "properties": {
+        "$schema": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to the schema file."
+        },
         "real-name": {
             "type": "string",
             "description": "The real name of the playable entity."
