@@ -29,6 +29,10 @@
 									"items": { "type": "integer" },
 									"description": "Sobrescreve os índices dos frames para esta animação."
 								},
+								"speed": {
+									"type": "number",
+									"description": "Sobrescreve a velocidade da animação em frames por segundo."
+								},
 								"trigger": {
 									"type": "string",
 									"description": "Sobrescreve o evento que ativa a animação."
@@ -92,5 +96,6 @@
 				}
 			}
 		}
-	}
+	},
+    "additionalProperties": false
 }

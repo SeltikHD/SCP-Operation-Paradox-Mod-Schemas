@@ -30,12 +30,17 @@
 					"patternProperties": {
 						".*": {
 							"type": "object",
-							"required": ["frames", "trigger"],
+							"required": ["frames", "speed"],
 							"properties": {
 								"frames": {
 									"type": "array",
 									"items": { "type": "integer" },
 									"description": "Índices dos frames para esta animação."
+								},
+								"speed": {
+									"type": "number",
+									"description": "Velocidade da animação em frames por segundo.",
+									"minimum": 0
 								},
 								"trigger": {
 									"type": "string",
@@ -48,7 +53,7 @@
 				}
 			}
 		},
-		"default": {
+		"attributes": {
 			"type": "object",
 			"required": ["health", "damage", "movement-pattern", "attack-type"],
 			"properties": {
@@ -104,5 +109,6 @@
 				}
 			}
 		}
-	}
+	},
+    "additionalProperties": false
 }

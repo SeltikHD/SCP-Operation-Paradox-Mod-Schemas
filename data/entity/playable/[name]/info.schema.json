@@ -62,5 +62,6 @@
             "required": ["tile-size"]
         }
     },
-    "required": ["real-name", "description", "attributes", "metadata"]
+    "required": ["real-name", "description", "attributes", "metadata"],
+    "additionalProperties": false
 }
