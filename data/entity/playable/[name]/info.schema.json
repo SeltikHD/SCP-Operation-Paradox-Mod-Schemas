@@ -7,7 +7,6 @@
     "properties": {
         "$schema": {
             "type": "string",
-            "format": "uri",
             "description": "The URL to the schema file."
         },
         "real-name": {
