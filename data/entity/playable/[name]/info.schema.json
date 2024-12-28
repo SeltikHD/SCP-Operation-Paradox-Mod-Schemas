@@ -1,0 +1,62 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://raw.githubusercontent.com/SeltikHD/SCP-Operation-Paradox-Mod-Schemas/refs/heads/master/data/entity/playable/[name]/info.schema.json",
+    "title": "Playable Entity Info Schema",
+    "description": "Defines the structure for playable entity information.",
+    "type": "object",
+    "properties": {
+        "real-name": {
+            "type": "string",
+            "description": "The real name of the playable entity."
+        },
+        "description": {
+            "type": "string",
+            "description": "A brief description of the playable entity."
+        },
+        "attributes": {
+            "type": "object",
+            "description": "Defines the core attributes of the playable entity.",
+            "properties": {
+                "life": {
+                    "type": "integer",
+                    "description": "The health points of the entity.",
+                    "minimum": 1
+                },
+                "dmg": {
+                    "type": "integer",
+                    "description": "The damage points the entity can inflict.",
+                    "minimum": 0
+                },
+                "defense": {
+                    "type": "integer",
+                    "description": "The defense level of the entity.",
+                    "minimum": 0
+                },
+                "speed": {
+                    "type": "number",
+                    "description": "The movement speed of the entity.",
+                    "minimum": 0
+                },
+                "dodge-reload": {
+                    "type": "number",
+                    "description": "The time taken to reload a dodge.",
+                    "minimum": 0
+                }
+            },
+            "required": ["life", "dmg", "defense", "speed", "dodge-reload"]
+        },
+        "metadata": {
+            "type": "object",
+            "description": "Additional metadata for the playable entity.",
+            "properties": {
+                "tile-size": {
+                    "type": "integer",
+                    "description": "The size of the tile representing the entity.",
+                    "minimum": 1
+                }
+            },
+            "required": ["tile-size"]
+        }
+    },
+    "required": ["real-name", "description", "attributes", "metadata"]
+}
