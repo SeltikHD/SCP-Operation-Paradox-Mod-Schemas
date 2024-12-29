@@ -1,71 +1,50 @@
 {
-	"$schema": "https://json-schema.org/draft-07/schema#",
+	"$schema": "http://json-schema.org/draft-07/schema#",
 	"type": "object",
-	"required": ["name", "description", "class", "metadata", "default"],
 	"properties": {
+		"$schema": {
+			"type": "string",
+			"description": "The JSON schema to be used for validating this file."
+		},
 		"name": {
 			"type": "string",
-			"description": "Nome do inimigo."
+			"description": "Enemy's name."
 		},
 		"description": {
 			"type": "string",
-			"description": "Descrição do inimigo."
+			"description": "Enemy's description."
 		},
 		"class": {
 			"type": "string",
-			"enum": ["common", "miniboss", "boss"],
-			"description": "Classificação do inimigo."
+			"description": "Enemy's class, such as common, miniboss, or boss."
 		},
 		"metadata": {
 			"type": "object",
-			"required": ["tile-size", "animations"],
 			"properties": {
 				"tile-size": {
 					"type": "integer",
-					"description": "Tamanho de cada tile no spritesheet em pixels.",
-					"minimum": 1
+					"description": "Tile size used in the spritesheet, in pixels."
 				},
 				"animations": {
 					"type": "object",
-					"patternProperties": {
-						".*": {
-							"type": "object",
-							"required": ["frames", "speed"],
-							"properties": {
-								"frames": {
-									"type": "array",
-									"items": { "type": "integer" },
-									"description": "Índices dos frames para esta animação."
-								},
-								"speed": {
-									"type": "number",
-									"description": "Velocidade da animação em frames por segundo.",
-									"minimum": 0
-								},
-								"trigger": {
-									"type": "string",
-									"description": "Evento que ativa a animação."
-								}
-							}
-						}
-					},
-					"description": "Mapeamento de animações e seus triggers."
+					"description": "Animation definitions based on actions.",
+					"additionalProperties": {
+						"type": "string"
+					}
 				}
-			}
+			},
+			"required": ["tile-size", "animations"]
 		},
 		"attributes": {
 			"type": "object",
-			"required": ["health", "damage", "movement-pattern", "attack-type"],
 			"properties": {
 				"health": {
-					"type": "number",
-					"description": "Vida inicial do inimigo.",
-					"minimum": 1
+					"type": "integer",
+					"description": "Enemy's health amount."
 				},
 				"damage": {
-					"type": "number",
-					"description": "Dano que o inimigo causa.",
-					"minimum": 0
+					"type": "integer",
+					"description": "Damage dealt by the enemy."
 				},
 				"movement-pattern": {
 					"type": "string",
@@ -82,33 +61,212 @@
 						"zigzag",
 						"teleport"
 					],
-					"description": "Padrão de movimento do inimigo."
+					"description": "Enemy's movement pattern."
 				},
 				"attack-type": {
 					"type": "string",
-					"enum": [
-						"melee",
-						"ranged",
-						"area",
-						"status-effect",
-						"dash",
-						"charge",
-						"trap",
-						"drain",
-						"summon",
-						"reflect",
-						"self-destruct",
-						"multi"
-					],
-					"description": "Tipo de ataque do inimigo."
+					"enum": ["melee", "ranged", "special"],
+					"description": "Enemy's main attack type."
 				},
-				"speed": {
-					"type": "number",
-					"description": "Velocidade de movimento do inimigo.",
-					"minimum": 0
+				"subeffects": {
+					"type": "array",
+					"description": "List of subeffects associated with the enemy.",
+					"items": {
+						"type": "object",
+						"oneOf": [
+							{
+								"type": "object",
+								"properties": {
+									"type": { "const": "area" },
+									"pattern": {
+										"type": "string",
+										"description": "Area pattern (circle, rectangle, etc.)."
+									},
+									"size": {
+										"type": "integer",
+										"description": "Area size in pixels."
+									}
+								},
+								"required": ["type", "pattern", "size"]
+							},
+							{
+								"type": "object",
+								"properties": {
+									"type": { "const": "status-effect" },
+									"effect": {
+										"type": "string",
+										"description": "Status effect type (poison, slow, etc.)."
+									},
+									"duration": {
+										"type": "integer",
+										"description": "Effect duration in seconds."
+									},
+									"intensity": {
+										"type": "integer",
+										"description": "Effect intensity."
+									}
+								},
+								"required": [
+									"type",
+									"effect",
+									"duration",
+									"intensity"
+								]
+							},
+							{
+								"type": "object",
+								"properties": {
+									"type": { "const": "dash" },
+									"speed": {
+										"type": "integer",
+										"description": "Dash speed."
+									},
+									"charge-time": {
+										"type": "integer",
+										"description": "Dash charge time in seconds."
+									},
+									"max-distance": {
+										"type": "integer",
+										"description": "Maximum dash distance in pixels."
+									}
+								},
+								"required": [
+									"type",
+									"speed",
+									"charge-time",
+									"max-distance"
+								]
+							},
+							{
+								"type": "object",
+								"properties": {
+									"type": { "const": "charge" },
+									"charge-time": {
+										"type": "integer",
+										"description": "Attack charge time."
+									},
+									"speed": {
+										"type": "integer",
+										"description": "Speed during the charge."
+									},
+									"max-distance": {
+										"type": "integer",
+										"description": "Maximum charge distance."
+									}
+								},
+								"required": [
+									"type",
+									"charge-time",
+									"speed",
+									"max-distance"
+								]
+							},
+							{
+								"type": "object",
+								"properties": {
+									"type": { "const": "trap" },
+									"max-traps": {
+										"type": "integer",
+										"description": "Maximum number of traps allowed."
+									},
+									"trap-types": {
+										"type": "array",
+										"description": "List of possible trap types.",
+										"items": { "type": "string" }
+									}
+								},
+								"required": ["type", "max-traps", "trap-types"]
+							},
+							{
+								"type": "object",
+								"properties": {
+									"type": { "const": "drain" },
+									"fixed-drain": {
+										"type": "integer",
+										"description": "Fixed amount of life drained (if applicable)."
+									},
+									"life-percentage": {
+										"type": "number",
+										"description": "Percentage of player's life to be drained."
+									}
+								},
+								"required": [
+									"type",
+									"fixed-drain",
+									"life-percentage"
+								]
+							},
+							{
+								"type": "object",
+								"properties": {
+									"type": { "const": "summon" },
+									"minions": {
+										"type": "integer",
+										"description": "Number of minions summoned."
+									},
+									"can-respawn": {
+										"type": "boolean",
+										"description": "Whether minions can be summoned again after dying."
+									},
+									"summon-time": {
+										"type": "integer",
+										"description": "Time required to summon the minions."
+									},
+									"can-attack": {
+										"type": "boolean",
+										"description": "Whether the minions can attack."
+									}
+								},
+								"required": [
+									"type",
+									"minions",
+									"can-respawn",
+									"summon-time",
+									"can-attack"
+								]
+							},
+							{
+								"type": "object",
+								"properties": {
+									"type": { "const": "reflect" },
+									"max-reflections": {
+										"type": "integer",
+										"description": "Maximum number of reflections allowed."
+									}
+								},
+								"required": ["type", "max-reflections"]
+							},
+							{
+								"type": "object",
+								"properties": {
+									"type": { "const": "self-destruct" },
+									"delay": {
+										"type": "integer",
+										"description": "Explosion delay time in seconds."
+									},
+									"radius": {
+										"type": "integer",
+										"description": "Explosion radius in pixels."
+									},
+									"time-to-explode": {
+										"type": "integer",
+										"description": "Total time until detonation."
+									}
+								},
+								"required": [
+									"type",
+									"delay",
+									"radius",
+									"time-to-explode"
+								]
+							}
+						]
+					}
 				}
-			}
+			},
+			"required": ["health", "damage", "movement-pattern", "attack-type"]
 		}
 	},
-    "additionalProperties": false
+	"required": ["name", "description", "class", "metadata", "attributes"],
+	"additionalProperties": false
 }

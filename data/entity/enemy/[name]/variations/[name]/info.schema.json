@@ -1,59 +1,50 @@
 {
 	"$schema": "https://json-schema.org/draft-07/schema#",
 	"type": "object",
-	"description": "Sobrescrita opcional das configurações do inimigo raiz.",
+	"description": "Optional override of the root enemy's settings.",
 	"properties": {
+		"$schema": {
+			"type": "string",
+			"description": "The JSON schema to be used for validating this file."
+		},
 		"name": {
 			"type": "string",
-			"description": "Nome da variação do inimigo."
+			"description": "Enemy's name."
 		},
 		"description": {
 			"type": "string",
-			"description": "Descrição da variação do inimigo."
+			"description": "Enemy's description."
+		},
+		"class": {
+			"type": "string",
+			"description": "Enemy's class, such as common, miniboss, or boss."
 		},
 		"metadata": {
 			"type": "object",
 			"properties": {
 				"tile-size": {
 					"type": "integer",
-					"description": "Sobrescreve o tamanho de cada tile no spritesheet."
+					"description": "Tile size used in the spritesheet, in pixels."
 				},
 				"animations": {
 					"type": "object",
-					"patternProperties": {
-						".*": {
-							"type": "object",
-							"properties": {
-								"frames": {
-									"type": "array",
-									"items": { "type": "integer" },
-									"description": "Sobrescreve os índices dos frames para esta animação."
-								},
-								"speed": {
-									"type": "number",
-									"description": "Sobrescreve a velocidade da animação em frames por segundo."
-								},
-								"trigger": {
-									"type": "string",
-									"description": "Sobrescreve o evento que ativa a animação."
-								}
-							}
-						}
-					},
-					"description": "Sobrescreve as animações e seus triggers."
+					"description": "Animation definitions based on actions.",
+					"additionalProperties": {
+						"type": "string"
+					}
 				}
 			}
 		},
-		"default": {
+		"attributes": {
 			"type": "object",
 			"properties": {
 				"health": {
-					"type": "number",
-					"description": "Sobrescreve a vida inicial do inimigo."
+					"type": "integer",
+					"description": "Enemy's health amount."
 				},
 				"damage": {
-					"type": "number",
-					"description": "Sobrescreve o dano que o inimigo causa."
+					"type": "integer",
+					"description": "Damage dealt by the enemy."
 				},
 				"movement-pattern": {
 					"type": "string",
@@ -70,32 +61,171 @@
 						"zigzag",
 						"teleport"
 					],
-					"description": "Sobrescreve o padrão de movimento do inimigo."
+					"description": "Enemy's movement pattern."
 				},
 				"attack-type": {
 					"type": "string",
-					"enum": [
-						"melee",
-						"ranged",
-						"area",
-						"status-effect",
-						"dash",
-						"charge",
-						"trap",
-						"drain",
-						"summon",
-						"reflect",
-						"self-destruct",
-						"multi"
-					],
-					"description": "Sobrescreve o tipo de ataque do inimigo."
+					"enum": ["melee", "ranged", "special"],
+					"description": "Enemy's main attack type."
 				},
-				"speed": {
-					"type": "number",
-					"description": "Sobrescreve a velocidade de movimento do inimigo."
+				"subeffects": {
+					"type": "array",
+					"description": "List of subeffects associated with the enemy.",
+					"items": {
+						"type": "object",
+						"oneOf": [
+							{
+								"type": "object",
+								"properties": {
+									"type": { "const": "area" },
+									"pattern": {
+										"type": "string",
+										"description": "Area pattern (circle, rectangle, etc.)."
+									},
+									"size": {
+										"type": "integer",
+										"description": "Area size in pixels."
+									}
+								}
+							},
+							{
+								"type": "object",
+								"properties": {
+									"type": { "const": "status-effect" },
+									"effect": {
+										"type": "string",
+										"description": "Status effect type (poison, slow, etc.)."
+									},
+									"duration": {
+										"type": "integer",
+										"description": "Effect duration in seconds."
+									},
+									"intensity": {
+										"type": "integer",
+										"description": "Effect intensity."
+									}
+								}
+							},
+							{
+								"type": "object",
+								"properties": {
+									"type": { "const": "dash" },
+									"speed": {
+										"type": "integer",
+										"description": "Dash speed."
+									},
+									"charge-time": {
+										"type": "integer",
+										"description": "Dash charge time in seconds."
+									},
+									"max-distance": {
+										"type": "integer",
+										"description": "Maximum dash distance in pixels."
+									}
+								}
+							},
+							{
+								"type": "object",
+								"properties": {
+									"type": { "const": "charge" },
+									"charge-time": {
+										"type": "integer",
+										"description": "Attack charge time."
+									},
+									"speed": {
+										"type": "integer",
+										"description": "Speed during the charge."
+									},
+									"max-distance": {
+										"type": "integer",
+										"description": "Maximum charge distance."
+									}
+								}
+							},
+							{
+								"type": "object",
+								"properties": {
+									"type": { "const": "trap" },
+									"max-traps": {
+										"type": "integer",
+										"description": "Maximum number of traps allowed."
+									},
+									"trap-types": {
+										"type": "array",
+										"description": "List of possible trap types.",
+										"items": { "type": "string" }
+									}
+								}
+							},
+							{
+								"type": "object",
+								"properties": {
+									"type": { "const": "drain" },
+									"fixed-drain": {
+										"type": "integer",
+										"description": "Fixed amount of life drained (if applicable)."
+									},
+									"life-percentage": {
+										"type": "number",
+										"description": "Percentage of player's life to be drained."
+									}
+								}
+							},
+							{
+								"type": "object",
+								"properties": {
+									"type": { "const": "summon" },
+									"minions": {
+										"type": "integer",
+										"description": "Number of minions summoned."
+									},
+									"can-respawn": {
+										"type": "boolean",
+										"description": "Whether minions can be summoned again after dying."
+									},
+									"summon-time": {
+										"type": "integer",
+										"description": "Time required to summon the minions."
+									},
+									"can-attack": {
+										"type": "boolean",
+										"description": "Whether the minions can attack."
+									}
+								}
+							},
+							{
+								"type": "object",
+								"properties": {
+									"type": { "const": "reflect" },
+									"max-reflections": {
+										"type": "integer",
+										"description": "Maximum number of reflections allowed."
+									}
+								}
+							},
+							{
+								"type": "object",
+								"properties": {
+									"type": { "const": "self-destruct" },
+									"delay": {
+										"type": "integer",
+										"description": "Explosion delay time in seconds."
+									},
+									"radius": {
+										"type": "integer",
+										"description": "Explosion radius in pixels."
+									},
+									"time-to-explode": {
+										"type": "integer",
+										"description": "Total time until detonation."
+									}
+								}
+							}
+						]
+					}
 				}
 			}
 		}
 	},
-    "additionalProperties": false
+	"additionalProperties": false
 }
