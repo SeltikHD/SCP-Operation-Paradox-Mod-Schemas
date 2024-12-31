@@ -28,10 +28,29 @@
 				},
 				"animations": {
 					"type": "object",
-					"description": "Animation definitions based on actions.",
-					"additionalProperties": {
-						"type": "string"
-					}
+					"patternProperties": {
+						".*": {
+							"type": "object",
+							"required": ["frames", "speed"],
+							"properties": {
+								"frames": {
+									"type": "array",
+									"items": { "type": "integer" },
+									"description": "Índices dos frames para esta animação."
+								},
+								"speed": {
+									"type": "number",
+									"description": "Velocidade da animação em frames por segundo.",
+									"minimum": 0
+								},
+								"trigger": {
+									"type": "string",
+									"description": "Evento que ativa a animação."
+								}
+							}
+						}
+					},
+					"description": "Mapeamento de animações e seus triggers."
 				}
 			}
 		},
