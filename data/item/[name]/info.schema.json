@@ -1,0 +1,263 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://raw.githubusercontent.com/SeltikHD/SCP-Operation-Paradox-Mod-Schemas/refs/heads/master/data/items/[name]/info.schema.json",
+	"title": "Item Info Schema",
+	"description": "Defines the structure for item information.",
+	"type": "object",
+	"properties": {
+		"$schema": {
+			"type": "string",
+			"description": "The URL to the schema file."
+		},
+		"name": {
+			"type": "string",
+			"description": "Nome do coletável."
+		},
+		"description": {
+			"type": "string",
+			"description": "Descrição do coletável."
+		},
+		"type": {
+			"type": "string",
+			"enum": ["ammo", "health", "special"],
+			"description": "Tipo do coletável: munição, vida ou item especial."
+		},
+		"metadata": {
+			"type": "object",
+			"description": "Metadados do coletável.",
+			"properties": {
+				"tile-size": {
+					"type": "number",
+					"minimum": 1,
+					"description": "Tamanho do sprite do coletável em pixels."
+				},
+				"animations": {
+					"type": "object",
+					"description": "Animações do coletável.",
+					"properties": {
+						"idle": {
+							"type": "object",
+							"description": "Animação padrão do coletável.",
+							"properties": {
+								"frames": {
+									"type": "array",
+									"items": {
+										"type": "number"
+									},
+									"description": "Índices dos frames da animação."
+								},
+								"duration": {
+									"type": "number",
+									"minimum": 0,
+									"description": "Duração de cada frame em segundos."
+								}
+							},
+							"required": ["frames", "duration"]
+						},
+						"absorb": {
+							"type": "object",
+							"description": "Animação de absorção do coletável.",
+							"properties": {
+								"frames": {
+									"type": "array",
+									"items": {
+										"type": "number"
+									},
+									"description": "Índices dos frames da animação."
+								},
+								"duration": {
+									"type": "number",
+									"minimum": 0,
+									"description": "Duração de cada frame em segundos."
+								},
+								"loop": {
+									"type": "boolean",
+									"description": "Indica se a animação deve ser repetida."
+								}
+							},
+							"required": ["frames", "duration", "loop"]
+						}
+					},
+					"required": ["idle"],
+					"additionalProperties": false
+				}
+			},
+			"required": ["tile-size", "animations"],
+			"additionalProperties": false
+		},
+		"attributes": {
+			"type": "object",
+			"description": "Atributos específicos do coletável.",
+			"properties": {
+				"effect": {
+					"type": "object",
+					"oneOf": [
+						{
+							"type": "object",
+							"properties": {
+								"type": { "const": "ammo" },
+								"amount": {
+									"type": "number",
+									"minimum": 1,
+									"description": "Quantidade de munição fornecida."
+								},
+								"weapon-type": {
+									"type": "string",
+									"description": "Tipo de arma compatível."
+								}
+							},
+							"required": ["type", "amount", "weapon-type"]
+						},
+						{
+							"type": "object",
+							"properties": {
+								"type": { "const": "health" },
+								"amount": {
+									"type": "number",
+									"minimum": 1,
+									"description": "Quantidade de vida recuperada."
+								}
+							},
+							"required": ["type", "amount"]
+						},
+						{
+							"type": "object",
+							"properties": {
+								"type": { "const": "special" },
+								"behavior": {
+									"type": "string",
+									"enum": [
+										"instant",
+										"deployable",
+										"toggleable"
+									],
+									"description": "Comportamento do item: ativação instantânea, posicionável no cenário ou ativável manualmente."
+								},
+								"cooldown": {
+									"type": "number",
+									"minimum": 0,
+									"description": "Tempo de recarga antes de poder ser usado novamente (em segundos)."
+								},
+								"special-effect": {
+									"type": "object",
+									"oneOf": [
+										{
+											"type": "object",
+											"properties": {
+												"type": {
+													"const": "explosive-attractor"
+												},
+												"radius": {
+													"type": "number",
+													"minimum": 1,
+													"description": "Raio de atração em pixels."
+												},
+												"duration": {
+													"type": "number",
+													"minimum": 1,
+													"description": "Tempo antes da explosão (em segundos)."
+												},
+												"explosion-force": {
+													"type": "object",
+													"properties": {
+														"initial": {
+															"type": "number",
+															"minimum": 1,
+															"description": "Força inicial da explosão."
+														},
+														"decay-time": {
+															"type": "number",
+															"minimum": 1,
+															"description": "Tempo de decaimento da explosão."
+														}
+													},
+													"required": [
+														"initial",
+														"decay-time"
+													]
+												}
+											},
+											"required": [
+												"type",
+												"radius",
+												"duration",
+												"explosion-force"
+											]
+										},
+										{
+											"type": "object",
+											"properties": {
+												"type": { "const": "shield" },
+												"duration": {
+													"type": "number",
+													"minimum": 1,
+													"description": "Duração do escudo em segundos."
+												},
+												"damage-absorption": {
+													"type": "number",
+													"minimum": 1,
+													"description": "Quantidade de dano absorvido pelo escudo."
+												}
+											},
+											"required": [
+												"type",
+												"duration",
+												"damage-absorption"
+											]
+										},
+										{
+											"type": "object",
+											"properties": {
+												"type": {
+													"const": "speed-boost"
+												},
+												"duration": {
+													"type": "number",
+													"minimum": 1,
+													"description": "Duração do aumento de velocidade (em segundos)."
+												},
+												"multiplier": {
+													"type": "number",
+													"minimum": 1.0,
+													"description": "Multiplicador de velocidade aplicado ao jogador."
+												}
+											},
+											"required": [
+												"type",
+												"duration",
+												"multiplier"
+											]
+										}
+									]
+								}
+							},
+							"required": ["type", "behavior", "special-effect"]
+						}
+					]
+				},
+				"rarity": {
+					"type": "string",
+					"enum": ["common", "uncommon", "rare", "legendary"],
+					"description": "Raridade do coletável."
+				},
+				"spawn-rate": {
+					"type": "number",
+					"minimum": 0,
+					"maximum": 1,
+					"description": "Chance de spawnar no mundo (de 0 a 1)."
+				}
+			},
+			"required": ["effect", "rarity", "spawn-rate"],
+			"additionalProperties": false
+		}
+	},
+	"required": [
+		"name",
+		"description",
+		"type",
+		"effect",
+		"rarity",
+		"spawn-rate"
+	],
+	"additionalProperties": false
+}
