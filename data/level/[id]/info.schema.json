@@ -1,0 +1,21 @@
+{
+	"$schema": "https://json-schema.org/draft-07/schema#",
+	"$id": "https://raw.githubusercontent.com/SeltikHD/SCP-Operation-Paradox-Mod-Schemas/refs/heads/master/pack.schema.json",
+	"type": "object",
+	"properties": {
+		"$schema": {
+			"type": "string",
+			"description": "The URL to the schema file."
+		},
+		"name": {
+			"type": "string",
+			"description": "The title of the pack."
+		},
+		"description": {
+			"type": "string",
+			"description": "A description of the pack."
+		}
+	},
+	"required": ["name", "description"],
+	"additionalProperties": false
+}
