@@ -1,14 +1,14 @@
 {
 	"$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "https://raw.githubusercontent.com/SeltikHD/SCP-Operation-Paradox-Mod-Schemas/refs/heads/master/data/items/[name]/info.schema.json",
-    "title": "Item Info Schema",
-    "description": "Defines the structure for item information.",
+	"$id": "https://raw.githubusercontent.com/SeltikHD/SCP-Operation-Paradox-Mod-Schemas/refs/heads/master/data/items/[name]/info.schema.json",
+	"title": "Item Info Schema",
+	"description": "Defines the structure for item information.",
 	"type": "object",
 	"properties": {
-        "$schema": {
-            "type": "string",
-            "description": "The URL to the schema file."
-        },
+		"$schema": {
+			"type": "string",
+			"description": "The URL to the schema file."
+		},
 		"name": {
 			"type": "string",
 			"description": "Nome do coletável."
@@ -30,7 +30,7 @@
 					"properties": {
 						"type": { "const": "ammo" },
 						"amount": {
-							"type": "integer",
+							"type": "number",
 							"minimum": 1,
 							"description": "Quantidade de munição fornecida."
 						},
@@ -46,7 +46,7 @@
 					"properties": {
 						"type": { "const": "health" },
 						"amount": {
-							"type": "integer",
+							"type": "number",
 							"minimum": 1,
 							"description": "Quantidade de vida recuperada."
 						}
@@ -63,7 +63,7 @@
 							"description": "Comportamento do item: ativação instantânea, posicionável no cenário ou ativável manualmente."
 						},
 						"cooldown": {
-							"type": "integer",
+							"type": "number",
 							"minimum": 0,
 							"description": "Tempo de recarga antes de poder ser usado novamente (em segundos)."
 						},
@@ -77,19 +77,33 @@
 											"const": "explosive-attractor"
 										},
 										"radius": {
-											"type": "integer",
+											"type": "number",
 											"minimum": 1,
 											"description": "Raio de atração em pixels."
 										},
 										"duration": {
-											"type": "integer",
+											"type": "number",
 											"minimum": 1,
 											"description": "Tempo antes da explosão (em segundos)."
 										},
 										"explosion-force": {
-											"type": "integer",
-											"minimum": 1,
-											"description": "Força da explosão aplicada aos inimigos."
+											"type": "object",
+											"properties": {
+												"initial": {
+													"type": "number",
+													"minimum": 1,
+													"description": "Força inicial da explosão."
+												},
+												"decay-time": {
+													"type": "number",
+													"minimum": 1,
+													"description": "Tempo de decaimento da explosão."
+												}
+											},
+											"required": [
+												"initial",
+												"decay-time"
+											]
 										}
 									},
 									"required": [
@@ -104,12 +118,12 @@
 									"properties": {
 										"type": { "const": "shield" },
 										"duration": {
-											"type": "integer",
+											"type": "number",
 											"minimum": 1,
 											"description": "Duração do escudo em segundos."
 										},
 										"damage-absorption": {
-											"type": "integer",
+											"type": "number",
 											"minimum": 1,
 											"description": "Quantidade de dano absorvido pelo escudo."
 										}
@@ -125,7 +139,7 @@
 									"properties": {
 										"type": { "const": "speed-boost" },
 										"duration": {
-											"type": "integer",
+											"type": "number",
 											"minimum": 1,
 											"description": "Duração do aumento de velocidade (em segundos)."
 										},
